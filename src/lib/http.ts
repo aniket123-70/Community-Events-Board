@@ -1,3 +1,4 @@
+import { unstable_rethrow } from "next/navigation";
 import { ZodError } from "zod";
 import { getAuthUser, type AuthUser } from "./auth";
 
@@ -17,6 +18,7 @@ export function handle<A extends unknown[]>(fn: (...args: A) => Promise<Response
     try {
       return await fn(...args);
     } catch (err) {
+      unstable_rethrow(err); // let Next.js internal signals (e.g. dynamic bail-out) through
       if (err instanceof HttpError) return jsonError(err.status, err.message);
       if (err instanceof ZodError) {
         return jsonError(400, err.issues[0]?.message ?? "Invalid input", err.issues);
