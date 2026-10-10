@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// role is "USER" or "ADMIN" (SQLite has no native enums, validated in code)
+model User {
+  id           Int                 @id @default(autoincrement())
+  email        String              @unique
+  passwordHash String
+  role         String              @default("USER")
+  createdAt    DateTime            @default(now())
+  favourites   FavouriteCategory[]
+  reminders    Reminder[]
+  cardDesigns  CardDesign[]
+}
+
+// category is one of: Music, Workshop, Food, Sports, Kids
+model Event {
+  id          Int          @id @default(autoincrement())
+  title       String
+  category    String
+  city        String
+  startsAt    DateTime
+  price       Int // whole rupees, 0 = free
+  description String
+  imageUrl    String
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  reminders   Reminder[]
+  cardDesigns CardDesign[]
+
+  // public listing always filters on isActive + startsAt and sorts by startsAt
+  @@index([isActive, startsAt])
+  @@index([isActive, category, city, startsAt])
+}
+
+model FavouriteCategory {
+  userId   Int
+  category String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, category])
+}
+
+model Reminder {
+  userId    Int
+  eventId   Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([userId, eventId])
+}
+
+model CardDesign {
+  userId    Int
+  eventId   Int
+  theme     String
+  stickers  String // JSON array of sticker ids, max 3
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([userId, eventId])
+}
