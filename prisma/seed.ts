@@ -18,7 +18,7 @@ function at(days: number, hour: number, minute = 0) {
 const img = (seed: string) => `https://picsum.photos/seed/${seed}/800/500`;
 
 const events = [
-  { title: "Saturday Night Jazz", category: "Music", city: "Coimbatore", startsAt: at(3, 18, 30), price: 499, imageUrl: img("jazz-night"), isActive: true,
+  { title: "Jazz Night by the Lake", category: "Music", city: "Coimbatore", startsAt: at(3, 18, 30), price: 499, imageUrl: img("jazz-night"), isActive: true,
     description: "An intimate evening of live jazz standards with a local quartet. Seating is first come, first served." },
   { title: "Indie Night Live", category: "Music", city: "Bengaluru", startsAt: at(6, 20), price: 799, imageUrl: img("indie-night"), isActive: true,
     description: "Three up-and-coming indie bands share one stage for a night of original music." },
