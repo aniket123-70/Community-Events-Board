@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/db";
-import { buildEventsWhere, eventFiltersSchema, publicEventSelect } from "@/lib/events";
+import { getAuthUser } from "@/lib/auth";
+import { buildEventsWhere, eventFiltersSchema, publicEventSelect, withReminded } from "@/lib/events";
 import { handle } from "@/lib/http";
 
 // GET /api/events?category=Music&city=Coimbatore&q=night&page=1
@@ -19,8 +20,10 @@ export const GET = handle(async (request: Request) => {
     }),
   ]);
 
+  const user = await getAuthUser(request);
+
   return Response.json({
-    events,
+    events: await withReminded(events, user?.id),
     pagination: {
       page: filters.page,
       pageSize: filters.pageSize,

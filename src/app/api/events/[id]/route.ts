@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/db";
-import { publicEventSelect } from "@/lib/events";
+import { getAuthUser } from "@/lib/auth";
+import { publicEventSelect, withReminded } from "@/lib/events";
 import { handle, HttpError } from "@/lib/http";
 
-export const GET = handle(async (_request: Request, ctx: RouteContext<"/api/events/[id]">) => {
+export const GET = handle(async (request: Request, ctx: RouteContext<"/api/events/[id]">) => {
   const id = Number((await ctx.params).id);
   if (!Number.isInteger(id)) throw new HttpError(404, "Event not found");
 
@@ -13,5 +14,7 @@ export const GET = handle(async (_request: Request, ctx: RouteContext<"/api/even
   });
   if (!event) throw new HttpError(404, "Event not found");
 
-  return Response.json({ event });
+  const user = await getAuthUser(request);
+  const [withFlag] = await withReminded([event], user?.id);
+  return Response.json({ event: withFlag });
 });

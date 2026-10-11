@@ -2,6 +2,7 @@ import "server-only";
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { CATEGORIES, PAGE_SIZE } from "./constants";
+import { prisma } from "./db";
 
 export const eventFiltersSchema = z.object({
   category: z.enum(CATEGORIES).optional().catch(undefined),
@@ -37,3 +38,14 @@ export const publicEventSelect = {
   description: true,
   imageUrl: true,
 } satisfies Prisma.EventSelect;
+
+/** Adds `isReminded` for the logged-in user (always false for guests). */
+export async function withReminded<T extends { id: number }>(events: T[], userId?: number) {
+  if (!userId || events.length === 0) return events.map((e) => ({ ...e, isReminded: false }));
+  const reminders = await prisma.reminder.findMany({
+    where: { userId, eventId: { in: events.map((e) => e.id) } },
+    select: { eventId: true },
+  });
+  const reminded = new Set(reminders.map((r) => r.eventId));
+  return events.map((e) => ({ ...e, isReminded: reminded.has(e.id) }));
+}
