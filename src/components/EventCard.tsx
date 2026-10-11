@@ -3,6 +3,7 @@ import { CalendarDays, MapPin } from "lucide-react";
 import { formatEventDate, formatPrice } from "@/lib/format";
 import type { EventItem } from "@/lib/types";
 import { EventImage } from "./EventImage";
+import { RemindButton } from "./RemindButton";
 
 export function EventCard({ event }: { event: EventItem }) {
   return (
@@ -23,12 +24,15 @@ export function EventCard({ event }: { event: EventItem }) {
             {event.title}
           </Link>
         </h3>
-        <div className="mt-auto flex items-center justify-between pt-2 text-sm">
+        <div className="flex items-center justify-between text-sm">
           <span className="flex items-center gap-1 text-muted">
             <MapPin className="size-4" />
             {event.city}
           </span>
           <span className="font-semibold">{formatPrice(event.price)}</span>
+        </div>
+        <div className="mt-auto pt-2">
+          <RemindButton eventId={event.id} initial={event.isReminded} />
         </div>
       </div>
     </article>

@@ -6,6 +6,7 @@ import { formatEventDate, formatPrice } from "@/lib/format";
 import type { EventItem } from "@/lib/types";
 import { useApi } from "@/lib/use-api";
 import { EventImage } from "./EventImage";
+import { RemindButton } from "./RemindButton";
 import { EmptyState, ErrorState } from "./States";
 
 export function EventDetail({ id }: { id: string }) {
@@ -42,6 +43,7 @@ export function EventDetail({ id }: { id: string }) {
             <Fact icon={<IndianRupee className="size-4" />} label="Price" value={formatPrice(event.price)} />
           </dl>
           <p className="max-w-prose leading-relaxed text-ink/80">{event.description}</p>
+          <RemindButton eventId={event.id} initial={event.isReminded} size="lg" />
         </div>
       </div>
     </article>
