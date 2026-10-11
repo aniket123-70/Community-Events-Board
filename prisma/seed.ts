@@ -15,7 +15,8 @@ function at(days: number, hour: number, minute = 0) {
   return new Date(ist.getTime() + offset);
 }
 
-const img = (seed: string) => `https://picsum.photos/seed/${seed}/800/500`;
+// Sample images ship with the app (public/images/events) so they load on any network
+const img = (name: string) => `/images/events/${name}.svg`;
 
 const events = [
   { title: "Jazz Night by the Lake", category: "Music", city: "Coimbatore", startsAt: at(3, 18, 30), price: 499, imageUrl: img("jazz-night"), isActive: true,
