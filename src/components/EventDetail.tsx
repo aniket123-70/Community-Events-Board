@@ -5,6 +5,7 @@ import { ArrowLeft, CalendarDays, IndianRupee, MapPin } from "lucide-react";
 import { formatEventDate, formatPrice } from "@/lib/format";
 import type { EventItem } from "@/lib/types";
 import { useApi } from "@/lib/use-api";
+import { CardDesigner } from "./CardDesigner";
 import { EventImage } from "./EventImage";
 import { RemindButton } from "./RemindButton";
 import { EmptyState, ErrorState } from "./States";
@@ -46,6 +47,7 @@ export function EventDetail({ id }: { id: string }) {
           <RemindButton eventId={event.id} initial={event.isReminded} size="lg" />
         </div>
       </div>
+      <CardDesigner event={event} />
     </article>
   );
 }
