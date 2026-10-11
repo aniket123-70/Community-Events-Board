@@ -17,12 +17,20 @@ export function CardGridSkeleton({ count = 6 }: { count?: number }) {
   );
 }
 
-export function EmptyState({ title, message, action }: { title: string; message: string; action?: React.ReactNode }) {
+export function EmptyState({
+  title,
+  message,
+  action,
+  icon = <CalendarX2 className="size-7" />,
+}: {
+  title: string;
+  message: string;
+  action?: React.ReactNode;
+  icon?: React.ReactNode;
+}) {
   return (
     <div className="card flex flex-col items-center px-6 py-14 text-center">
-      <span className="mb-4 grid size-14 place-items-center rounded-2xl bg-coral-50 text-coral-500">
-        <CalendarX2 className="size-7" />
-      </span>
+      <span className="mb-4 grid size-14 place-items-center rounded-2xl bg-coral-50 text-coral-500">{icon}</span>
       <h3 className="text-lg font-semibold">{title}</h3>
       <p className="mt-1 max-w-sm text-sm text-muted">{message}</p>
       {action && <div className="mt-5">{action}</div>}

@@ -1,6 +1,10 @@
 // Browser-side helper for calling our own JSON API. The auth cookie is sent automatically.
 export class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(
+    public status: number,
+    message: string,
+    public details?: { path: (string | number)[]; message: string }[],
+  ) {
     super(message);
   }
 }
@@ -19,6 +23,6 @@ export async function api<T>(path: string, init?: RequestInit & { json?: unknown
   }
 
   const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new ApiError(res.status, data.error ?? "Something went wrong");
+  if (!res.ok) throw new ApiError(res.status, data.error ?? "Something went wrong", data.details);
   return data as T;
 }

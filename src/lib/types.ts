@@ -9,7 +9,10 @@ export type EventItem = {
   price: number;
   description: string;
   imageUrl: string;
+  isReminded?: boolean;
 };
+
+export type AdminEvent = EventItem & { isActive: boolean; createdAt: string };
 
 export type Pagination = { page: number; pageSize: number; total: number; totalPages: number };
 
