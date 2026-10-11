@@ -40,7 +40,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
         json: { email, password },
       });
       setUser(user);
-      router.push(user.role === "ADMIN" ? (next ?? "/admin") : (next ?? "/"));
+      // new users (or anyone without favourites yet) pick their interests first
+      const home = user.role === "ADMIN" ? "/admin" : user.favourites.length === 0 ? "/preferences" : "/feed";
+      router.push(next ?? home);
       router.refresh();
     } catch (err) {
       setError((err as Error).message);
